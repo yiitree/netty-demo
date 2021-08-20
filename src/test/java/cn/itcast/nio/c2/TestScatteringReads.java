@@ -7,6 +7,9 @@ import java.nio.channels.FileChannel;
 
 import static cn.itcast.nio.c2.ByteBufferUtil.debugAll;
 
+/**
+ * 分散读取
+ */
 public class TestScatteringReads {
     public static void main(String[] args) {
         try (FileChannel channel = new RandomAccessFile("words.txt", "r").getChannel()) {

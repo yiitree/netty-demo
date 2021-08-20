@@ -12,10 +12,10 @@ public class TestByteBufferReadWrite {
         buffer.put(new byte[]{0x62, 0x63, 0x64}); // b  c  d
         debugAll(buffer);
 //        System.out.println(buffer.get());
-        buffer.flip();
+        buffer.flip(); // 要先改为写模式，调整指针位置
         System.out.println(buffer.get());
         debugAll(buffer);
-        buffer.compact();
+        buffer.compact();// 调用压缩模式
         debugAll(buffer);
         buffer.put(new byte[]{0x65, 0x6f});
         debugAll(buffer);

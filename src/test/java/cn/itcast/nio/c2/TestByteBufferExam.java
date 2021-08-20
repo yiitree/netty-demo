@@ -4,6 +4,9 @@ import java.nio.ByteBuffer;
 
 import static cn.itcast.nio.c2.ByteBufferUtil.debugAll;
 
+/**
+ * 案例：
+ */
 public class TestByteBufferExam {
     public static void main(String[] args) {
          /*
@@ -25,6 +28,7 @@ public class TestByteBufferExam {
     }
 
     private static void split(ByteBuffer source) {
+        // 切换为读模式
         source.flip();
         for (int i = 0; i < source.limit(); i++) {
             // 找到一条完整消息
