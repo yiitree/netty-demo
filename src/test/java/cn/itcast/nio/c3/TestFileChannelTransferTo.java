@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 /**
- * 两个channel传输数据
+ * 文件复制，两个channel传输数据
  * 注意：传输文件大小最多传2g
  */
 public class TestFileChannelTransferTo {
