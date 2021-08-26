@@ -5,6 +5,9 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+/**
+ * 客户端，接收数据
+ */
 public class WriteClient {
     public static void main(String[] args) throws IOException {
         SocketChannel sc = SocketChannel.open();

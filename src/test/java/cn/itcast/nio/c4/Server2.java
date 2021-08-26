@@ -25,12 +25,13 @@ public class Server2 {
      * 这样就不用一直while循环等待，白白消耗资源
      */
     public static void main(String[] args) throws IOException {
-        // 1. 创建 selector, 管理多个 channel
-        Selector selector = Selector.open();
 
-        // 2. 创建 channel 并设置为非阻塞，这里其实就先只创建一个channel
+        // 1. 创建 channel 并设置为非阻塞，这里其实就先只创建一个channel
         ServerSocketChannel ssc = ServerSocketChannel.open();
         ssc.configureBlocking(false);
+
+        // 2. 创建 selector, 管理多个 channel
+        Selector selector = Selector.open();
 
         // 3. 建立 selector 和 channel 的联系（把channel注册到selector上）
         // 返回：SelectionKey类似管理员 就是将来事件发生后，通过它可以知道 1.是什么事件 2.哪个channel的事件
@@ -69,6 +70,54 @@ public class Server2 {
                 log.debug("key: {}", key);
 
                 // 8.处理
+                ServerSocketChannel channel = (ServerSocketChannel) key.channel();
+                // 9.建立连接 --- 其实就是处理连接，如果没有accept()表示不进行处理，Select就会一直循环等待处理
+                SocketChannel sc = channel.accept();
+                // 建立连接后就继续处理
+
+//                // 取消处理
+//                key.cancel();
+
+            }
+        }
+    }
+
+
+    /**
+     * 方案三：非阻塞式 --- 建立事件（建立连接）、取消事件（取消连接）
+     * 使用Selector，用于监视是否有事件发生，
+     * 如果有时间发生，就唤醒线程(channel)处理事件，
+     * 这样就不用一直while循环等待，白白消耗资源
+     */
+    public static void main1(String[] args) throws IOException {
+
+        // 1. 创建服务器 channel
+        ServerSocketChannel ssc = ServerSocketChannel.open();
+        ssc.configureBlocking(false);
+
+        // 2. 创建 selector 其实是一个容器，保存SelectionKey
+        Selector selector = Selector.open();
+
+        // 3. 创建SelectionKey 管理服务器channel --- 主要是为了唤醒channel
+        SelectionKey sscKey = ssc.register(selector, 0, null);
+
+        // 3.1 设置SelectionKey关注事件类型
+        sscKey.interestOps(SelectionKey.OP_ACCEPT);
+        log.debug("sscKey:{}", sscKey);
+        // 3.2 设置SelectionKey监听端口
+        ssc.bind(new InetSocketAddress(8888));
+
+        while (true) {
+            // 4. 监听selector是否被唤醒
+            selector.select();
+
+            // 5. 循环遍历selector中的SelectionKey是否有事件发生
+            Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
+            while (iter.hasNext()) {
+                // 6.这个key只是用来监视事件的
+                SelectionKey key = iter.next();
+
+                // 8.从SelectionKey中
                 ServerSocketChannel channel = (ServerSocketChannel) key.channel();
                 // 9.建立连接 --- 其实就是处理连接，如果没有accept()表示不进行处理，Select就会一直循环等待处理
                 SocketChannel sc = channel.accept();
