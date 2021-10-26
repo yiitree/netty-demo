@@ -8,13 +8,13 @@ import java.nio.charset.StandardCharsets;
 
 import static cn.itcast.nio.c2.ByteBufferUtil.debugAll;
 
-public class TestByteBufferString {
+public class T05TestByteBufferString {
     public static void main(String[] args) {
         // -------------- String 转化 byte --------------
         // 1. 字符串转为 ByteBuffer   String.getBytes()
         // 不会自动转化模式，此时还是写模式
         ByteBuffer buffer1 = ByteBuffer.allocate(16);
-        buffer1.put("hello".getBytes());
+        buffer1.put("你".getBytes());
         debugAll(buffer1);
 
         // 2. Charset

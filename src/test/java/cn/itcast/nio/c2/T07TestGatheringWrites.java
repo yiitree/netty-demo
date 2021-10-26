@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 集中写入
  */
-public class TestGatheringWrites {
+public class T07TestGatheringWrites {
     public static void main(String[] args) {
         ByteBuffer b1 = StandardCharsets.UTF_8.encode("hello");
         ByteBuffer b2 = StandardCharsets.UTF_8.encode("world");

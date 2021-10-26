@@ -7,6 +7,9 @@ import java.nio.ByteBuffer;
 import static io.netty.util.internal.MathUtil.isOutOfBounds;
 import static io.netty.util.internal.StringUtil.NEWLINE;
 
+/**
+ * 只是一个工具类，依赖了netty，用于查看内存信息的工具类
+ */
 public class ByteBufferUtil {
     private static final char[] BYTE2CHAR = new char[256];
     private static final char[] HEXDUMP_TABLE = new char[256 * 4];
@@ -78,7 +81,7 @@ public class ByteBufferUtil {
         buffer.limit(buffer.capacity());
         StringBuilder origin = new StringBuilder(256);
         appendPrettyHexDump(origin, buffer, 0, buffer.capacity());
-        System.out.println("+--------+-------------------- all ------------------------+----------------+");
+        System.out.println("+--------+-------------------- 开始 ------------------------+----------------+");
         System.out.printf("position: [%d], limit: [%d]\n", buffer.position(), oldlimit);
         System.out.println(origin);
         buffer.limit(oldlimit);
