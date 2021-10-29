@@ -18,7 +18,7 @@ import static cn.itcast.nio.c2.ByteBufferUtil.debugRead;
  * 然后创建byteBuffer，读取到程序中
  */
 @Slf4j
-public class Server1 {
+public class T02Server1 {
 
     /**
      * 方案二：非阻塞式
@@ -34,6 +34,11 @@ public class Server1 {
         // 1.创建服务器
         ServerSocketChannel ssc = ServerSocketChannel.open();
         // 设置为非阻塞模式
+        /*
+        这里可以解解决客户端建立连接问题，所有连接都建立，保存在一个list中，但是这些连接不一定会立刻发送数据，
+        只是先进行保存。读取连接数据的时候让另一个线程来执行，互补影响
+        相当于大厅招待员，把客户先带到座位上，点餐让另外线程来，一个线程只干一件事
+         */
         ssc.configureBlocking(false);// 默认为阻塞模式
 
         // 2.绑定监听端口
@@ -47,16 +52,22 @@ public class Server1 {
             // 由于希望连接可以多次调用，因此放在while循环中
             // 返回读写通道，用SocketChannel来进行读写操作
 //            log.debug("准备建立连接");
-            SocketChannel sc = ssc.accept(); // 如果没有建立，sc为null
+            // 如果没有建立，sc为null - 这里相当于一直判断，是否有连接建立，否则就一直判断是否为空
+            /*
+            这里相当于一个服务员一直来回问用户是否有要点餐，就非常繁忙，并且有一个问题，
+            这个服务员在接收一个客户点餐数据的时候就无法再干别的事情，其他人无法点餐
+             */
+            SocketChannel sc = ssc.accept();
             if(sc != null){
                 log.debug("连接建立完毕，{}",sc);
+                sc.configureBlocking(false);// 把socketChannel也设置为非阻塞模式 - 此时read也是非阻塞
                 channels.add(sc);
             }
             for (SocketChannel channel : channels) {
                 // 5.接收客户端发来的数据，读取到ByteBuffer中
 //                log.debug("准备开始读取数据，{}",sc);
                 // read此时也变成非阻塞模式
-                final int read = channel.read(buffer);
+                final int read = channel.read(buffer); // 也变成了非阻塞，如果没有数据返回0
                 if(read >0){
                     // 切换读模式
                     buffer.flip();

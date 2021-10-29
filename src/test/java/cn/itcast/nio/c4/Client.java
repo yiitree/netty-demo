@@ -6,7 +6,11 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 
+/**
+ * 客户端，用户和服务器建立连接
+ */
 public class Client {
+
 //    public static void main(String[] args) throws IOException {
 //        SocketChannel sc = SocketChannel.open();
 //        sc.connect(new InetSocketAddress("localhost", 8888));
@@ -17,8 +21,10 @@ public class Client {
 
 
     public static void main(String[] args) throws IOException {
+        // 创建socket用于连接服务器
         SocketChannel sc = SocketChannel.open();
         sc.connect(new InetSocketAddress("localhost", 8888));
+        // 连接服务器
         SocketAddress address = sc.getLocalAddress();
 // sc.write(Charset.defaultCharset().encode("hello\nworld\n"));
 //        sc.write(Charset.defaultCharset().encode("0123\n456789abcdef"));

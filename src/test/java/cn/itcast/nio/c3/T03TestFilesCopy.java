@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 /**
  * 文件复制
  */
-public class TestFilesCopy {
+public class T03TestFilesCopy {
 
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
@@ -17,11 +17,11 @@ public class TestFilesCopy {
         Files.walk(Paths.get(source)).forEach(path -> {
             try {
                 String targetName = path.toString().replace(source, target);
-                // 是目录
+                // 是目录就新建目录
                 if (Files.isDirectory(path)) {
                     Files.createDirectory(Paths.get(targetName));
                 }
-                // 是普通文件
+                // 是普通文件就拷贝过去
                 else if (Files.isRegularFile(path)) {
                     Files.copy(path, Paths.get(targetName));
                 }
