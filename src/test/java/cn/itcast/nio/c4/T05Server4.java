@@ -13,12 +13,14 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 
 /**
+ * 处理读事件
+ *
  * 服务器端
  * 首先创建channel进行连接，channel把数据读取到buffer中
  * 然后创建byteBuffer，读取到程序中
  */
 @Slf4j
-public class Server4 {
+public class T05Server4 {
 
     /**
      * 方案四：非阻塞式
@@ -47,7 +49,7 @@ public class Server4 {
         设置连接事件：
         accept：会在有连接请求时触发
         connect：是客户端连接建立后触发
-        read：客户端发送了数据，可以读到触发
+        read：客户端发送了数据，可以读到触发,客户端掉线的时候或者关闭的时候也会发送一次读事件
         write：可写事件
          */
         sscKey.interestOps(SelectionKey.OP_ACCEPT);
@@ -82,6 +84,7 @@ public class Server4 {
                     log.debug("scKey:{}", scKey);
                 // 如果是 read ---> 两种情况：在断开连接的时候还是会发送一次read事件
                 } else if (key.isReadable()) {
+                    // 要捕获一下异常，防止客户端直接强制停止
                     try {
                         // 拿到触发事件的channel
                         SocketChannel channel = (SocketChannel) key.channel();
