@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 
 /**
  * 客户端
+ * - 客户端选择是随便的，只能能发送请求就可以，之前的bio nio客户端都是可以的，只是netty又进行了封装
  */
 public class HelloClient {
 
@@ -18,7 +19,7 @@ public class HelloClient {
         new Bootstrap()
                 // 2. 添加 EventLoop
                 .group(new NioEventLoopGroup())
-                // 3. 选择客户端 channel 实现
+                // 3. 选择客户端 channel 实现 - 实际就是封装了jdk的nio
                 .channel(NioSocketChannel.class)
                 // 4. 添加处理器
                 .handler(

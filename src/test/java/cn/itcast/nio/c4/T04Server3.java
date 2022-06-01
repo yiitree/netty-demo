@@ -33,6 +33,8 @@ public class T04Server3 {
 
         // 2. 创建 ssc
         ServerSocketChannel ssc = ServerSocketChannel.open();
+
+
         ssc.configureBlocking(false);
         ssc.bind(new InetSocketAddress(8888));
 

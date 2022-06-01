@@ -24,34 +24,37 @@ public class T03Server2 {
      */
     public static void main(String[] args) throws IOException {
 
-        // 1. 创建 selector, 用于管理channel
+        // 1. 创建 selector, 可以管理多个channel
         Selector selector = Selector.open();
 
         // 2. 创建 ssc
         ServerSocketChannel ssc = ServerSocketChannel.open();
+        // 设置非阻塞
         ssc.configureBlocking(false);
         ssc.bind(new InetSocketAddress(8888));
 
         // 3. 把ssc注册到selector
         // 返回：SelectionKey类似管理员 就是将来事件发生后，通过它可以知道 1.是什么事件 2.哪个channel的事件
-        //                               selector    关注的事件      null
+        //                          selector    关注的事件，0表示不关注任何事件      null
         SelectionKey sscKey = ssc.register(selector, 0, null);
         log.debug("sscKey:{}", sscKey);
 
         /*
         4. 指定sscKey监听的事件
-            accept：会在有连接请求时触发
-            connect：是客户端连接建立后触发
-            read：客户端发送了数据，可以读到触发
-            write：可写事件
+            accept：服务器端事件，会在客户端发起连接请求时触发
+            connect：客户端事件，客户端连接服务器成功后，客户端触发
+            read：服务器事件，客户端发送了数据，可以读到触发
+            write：可写事件（后面会专门进行说明）
          */
         sscKey.interestOps(SelectionKey.OP_ACCEPT);
 
         while (true) {
-            // 5.selector持续监听 没有事件发生，线程阻塞; 有事件，线程才会恢复运行(就是为了解决一直while循环，浪费资源问题)
+            // 5.selector持续监听 没有事件发生，线程阻塞; 有事件，线程才会恢复运行
+            // (就是为了解决一直while循环，浪费资源问题)
             selector.select();
 
-            // 6.处理事件，由于一个selector是一个set，里面可以有多个key，因此要遍历是哪个key处理accept事件 - 因为一个服务器只有一个selector，但是每有一个客户端连接就创建一个ssc
+            // 6.处理事件，由于一个selector是一个set，里面可以有多个key，因此要遍历是哪个key处理accept事件
+            // - 因为一个服务器只有一个selector，但是每有一个客户端连接就创建一个ssc
             Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
 
             // 处理key 时，要从 selectedKeys 集合中删除，否则下次处理就会有问题，

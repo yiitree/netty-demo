@@ -14,12 +14,12 @@ import java.nio.channels.FileChannel;
 public class T01TestByteBuffer {
 
     public static void main(String[] args) {
-        // 获取FileChannel：1. 输入输出流， 2. RandomAccessFile
+        // 获取FileChannel方法：1. 输入输出流， 2. RandomAccessFile
         // FileChannel channel = new RandomAccessFile("words.txt", "r").getChannel()
         // FileChannel channel = new FileInputStream("data.txt").getChannel()
         try (FileChannel channel = new FileInputStream("data.txt").getChannel()) {
             // 准备缓冲区
-            ByteBuffer buffer = ByteBuffer.allocate(10);
+            ByteBuffer buffer = ByteBuffer.allocate(20);
             // 每次读取缓冲区大小，因此使用while循环，多次读取
             while(true) {
                 // 从 channel 读取数据，向 buffer 写入，len表示读取到的字节数，直到返回结果为-1表示读取完毕
